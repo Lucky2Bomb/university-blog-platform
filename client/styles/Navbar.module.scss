@@ -1,0 +1,84 @@
+@import "./fonts.module.scss";
+@import "./colors.module.scss";
+
+.navbar {
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 85px;
+        @include SOURCE-SANS-PRO-BOLD-20($gray-700);
+    }
+
+    &__left_block {
+        & .navbar__item {
+            padding: 10px 10px 10px 0;
+            margin-right: 30px;
+
+            &_active {
+                margin-right: 30px;
+            }
+        }
+    }
+
+    &__right_block {
+        & .navbar__item {
+            padding: 10px 0 10px 10px;
+            margin-left: 30px;
+
+            &_active {
+                margin-left: 30px;
+            }
+        }
+    }
+
+    &__item {
+        cursor: pointer;
+        color: $gray-700;
+        text-decoration: none;
+
+        &_active {
+            text-decoration: none;
+            color: $aqua-000;
+        }
+
+        &:hover {
+            color: $aqua-000;
+        }
+    }
+
+    &__container_special_style {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        @include SOURCE-SANS-PRO-BOLD-28($white);
+    }
+
+    &__left_block_special_style {
+        margin: 30px 0 0 60px;
+    }
+
+    &__right_block_special_style {
+        margin: 30px 60px 0 0;
+    }
+
+    &__item_special_style {
+        color: $white;
+        text-decoration: none;
+        padding: 5px 10px;
+        margin: 0 20px 0 20px;
+        cursor: pointer;
+
+        &_active {
+            color: $white;
+        }
+
+        &:hover {
+            color: $gray-600;
+        }
+    }
+}

@@ -1,0 +1,40 @@
+@import "./fonts.module.scss";
+@import "./colors.module.scss";
+
+.header {
+    &__background {
+        z-index: -1;
+        position: absolute;
+        height: 150px;
+        width: 100vw;
+        max-width: 100%;
+        overflow-x: hidden;
+        left: 0;
+        right: 0;
+        top: 85px;
+        background: linear-gradient(75.35deg, rgba(255, 255, 255, 0.2) 9.5%, rgba(0, 0, 0, 0.2) 81.71%), $aqua-000;
+    }
+
+    &__h1 {
+        position: absolute;
+        top: 72px;
+        @include OSWALD-REGULAR-64-H1($white);
+    }
+
+    &__margin_bottom {
+        width: 100vw;
+        overflow-x: hidden;
+        margin-bottom: 150px;
+    }
+}
+
+.button {
+    &__more_details {
+        color: $aqua-000;
+        @include ARIAL-BOLD-16($aqua-000);
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

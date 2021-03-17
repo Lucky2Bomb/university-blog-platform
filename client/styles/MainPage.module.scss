@@ -1,0 +1,97 @@
+@import "./colors.module.scss";
+@import "./fonts.module.scss";
+
+.main_page {
+    &__container {
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        max-height: 100%;
+        overflow: hidden;
+    }
+
+    &__grid_blocks {
+        top: 120px;
+        left: 0;
+        position: absolute;
+        display: grid;
+        grid-template-columns: auto minmax(700px, 50%);
+        width: 100%;
+        height: calc(100% - 120px);
+    }
+
+    &__right_grid_item {
+        align-self: center;
+        // position: absolute;
+        // left: 50%;
+        // width: 50%;
+        // max-width: 50%;
+    }
+
+    &__left_grid_item {
+        // position: absolute;
+        // left: 0;
+    }
+
+    &__h1_white {
+        // position: absolute;
+        width: 650px;
+        margin: 0;
+        
+        @include OSWALD-REGULAR-64-H1($white);
+    }
+    &__h3_white {
+        text-align: justify;
+        width: 700px;
+        margin: 0;
+        @include ARIAL-REGULAR-25-H3($white);
+    }
+
+    &__button_more_info_university_block {
+        width: 650px;
+        display: flex;
+        justify-content: center;
+        margin-top: 130px;
+    }
+
+    &__button_more_info_university {
+        @include SOURCE-SANS-PRO-BOLD-28($white);
+        border-radius: 4px;
+        border: none;
+        padding: 0 34px;
+        cursor: pointer;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.2) 100%), $red-orange-000;
+        &:hover {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0) 100%), $red-orange-000;
+        }
+        &:active {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%), $red-orange-000;
+        }
+    }
+
+    &__rectangle {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        left: 42%;
+        top: -220px;
+
+        background: linear-gradient(75.35deg, rgba(255, 255, 255, 0.2) 9.5%, rgba(0, 0, 0, 0.8) 81.71%), $aqua-000;
+        box-shadow: 0px 4px 5px 3px rgba(0, 0, 0, 0.5);
+        transform: rotate(13deg);
+    }
+
+    &__background_image {
+        width: 60%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../assets/images/main-page__background-image.jpg);
+        background-size: cover;
+        background-position: 50% 50%;
+    }
+}

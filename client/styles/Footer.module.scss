@@ -1,0 +1,20 @@
+@import "./fonts.module.scss";
+@import "./colors.module.scss";
+
+.footer {
+    &__container {
+        @include ARIAL-REGULAR-16($gray-700);
+    }
+
+    &__a {
+        text-decoration: none;
+        color: $gray-700;
+    }
+
+    &__footerbar_item {
+        text-decoration: none;
+        color: $gray-700;
+        padding: 11px 3px;
+        margin-left: 5px;
+    }
+}

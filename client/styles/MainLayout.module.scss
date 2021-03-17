@@ -1,0 +1,6 @@
+@import "./fonts.module.scss";
+@import "./colors.module.scss";
+
+.main_container {
+    @include ARIAL-REGULAR-16($gray-700);
+}

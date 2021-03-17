@@ -1,0 +1,99 @@
+@font-face {
+    font-family: Oswald;
+    src: url(../assets/fonts/Oswald/Oswald-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'SourceSansPro';
+    src: url(../assets/fonts/SourceSansPro/SourceSansPro-Regular.ttf);
+}
+
+@mixin ARIAL-REGULAR-25-H3($color) {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 25px;
+    line-height: 135.5%;
+    letter-spacing: 1.265em;
+    color: $color;
+}
+
+@mixin SOURCE-SANS-PRO-BOLD-28($color) {
+    font-family: 'SourceSansPro', Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 28px;
+    line-height: 213%;
+    color: $color;
+}
+
+@mixin SOURCE-SANS-PRO-BOLD-20($color) {
+    font-family: 'SourceSansPro', Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 213%;
+    color: $color;
+}
+
+@mixin OSWALD-REGULAR-64-H1($color) {
+    font-family: Oswald,Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 64px;
+    line-height: 135.5%;
+    letter-spacing: 0.165em;
+    color: $color;
+}
+
+@mixin ARIAL-BOLD-H2($color) {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 164.5%;
+    letter-spacing: 0.02em;
+    color: $color;
+}
+
+@mixin ARIAL-BOLD-H3($color) {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 164.5%;
+    letter-spacing: 0.02em;
+    color: $color;
+}
+
+@mixin ARIAL-BOLD-H4($color) {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 164.5%;
+    letter-spacing: 0.02em;
+    color: $color;
+}
+
+@mixin ARIAL-REGULAR-16($color) {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    text-align: justify;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 164.5%;
+    letter-spacing: 0.02em;
+    color: $color;
+}
+
+@mixin ARIAL-BOLD-16($color) {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 164.5%;
+    text-align: justify;
+    letter-spacing: 0.02em;
+    color: $color;
+}
