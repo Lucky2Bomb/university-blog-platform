@@ -18,6 +18,7 @@
     &__h1 {
         position: absolute;
         top: 72px;
+
         @include OSWALD-REGULAR-64-H1($white);
     }
 
@@ -28,11 +29,46 @@
     }
 }
 
+.text {
+    &__h1 {
+        @include OSWALD-REGULAR-64-H1($gray-700);
+        margin: 0;
+        padding: 0;
+    }
+
+    &__h2 {
+        @include ARIAL-BOLD-H2($gray-700);
+        margin: 0;
+        padding: 0;
+    }
+
+    &__h3 {
+        @include ARIAL-BOLD-H3($gray-700);
+        margin: 0;
+        padding: 0;
+    }
+}
+
 .button {
     &__more_details {
         color: $aqua-000;
+
         @include ARIAL-BOLD-16($aqua-000);
+
         text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__download {
+        color: $aqua-000;
+
+        @include ARIAL-BOLD-16($aqua-000);
+
+        text-decoration: none;
+
         &:hover {
             text-decoration: underline;
         }

@@ -10,7 +10,8 @@ export enum FileType {
 
 export enum SectionType {
     PUBLICATION = "publication",
-    PROFILE = "profile"
+    PROFILE_AVATAR = "profile_avatar",
+    PROFILE_BACKGROUND = "profile_background"
 }
 
 @Injectable()

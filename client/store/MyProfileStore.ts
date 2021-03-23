@@ -1,18 +1,22 @@
 import { makeAutoObservable } from "mobx";
-import { IMyProfileStore } from './../types/Profile';
+import { IMyProfileStore, IProfile } from './../types/Profile';
+import { IRole } from './../types/Role';
+import { RoleList } from "../other/role-list";
 
 export default class MyProfileStore implements IMyProfileStore {
     constructor() {
         makeAutoObservable(this);
     }
 
-    roles: string[] = null;
-    profile: object = null;
+    roles: RoleList[] = [];
+    updateProfile: boolean = false;
 
-    setRoles = (roles: string[]): void => {
+    goUpdateProfile = (): void => {
+        this.updateProfile = !this.updateProfile;
+    }
+
+    setRoles = (roles: RoleList[]): void => {
         this.roles = roles;
     }
-    setProfile = (profile: object): void => {
-        this.profile = profile;
-    }
 }
+

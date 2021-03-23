@@ -2,10 +2,10 @@ import axios from "axios";
 import config from "../../config";
 import { INewsResponse } from "../../types/News";
 
-export const getNews = async (count, offset): Promise<INewsResponse> => {
+export const getNews = async (count = 16, offset = 0): Promise<INewsResponse> => {
     try {
-        const response = await axios.get(`${config.serverURL}/publication/?count=${count}&offset=${offset}&usersId=[2]`);
-        console.log(response.data);
+        const request = `${config.serverURL}/publication/?count=${count}&offset=${offset}&usersId=[2]`;
+        const response = await axios.get(request);
         return response.data;
     } catch (error) {
         console.log(error);

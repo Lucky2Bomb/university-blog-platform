@@ -7,7 +7,7 @@ import { RoleModule } from "./models/role/role.module";
 import { PublicationModule } from "./models/publication/publication.module";
 import config from "config";
 import { RoleList } from "./models/role/role-list";
-import { AddUserIdInBodyMiddleware, CompareQueryUserIdAndTokenMiddleware, PushUserIdInQueryByTokenMiddleware } from "./middleware/user.middleware";
+import { AddUserIdInBodyMiddleware, CompareQueryUserIdAndTokenMiddleware, PushUserIdInQueryByTokenMiddleware, CompareBodyUserIdAndTokenMiddleware } from "./middleware/user.middleware";
 import { AuthMiddleware } from "./middleware/auth.middleware";
 import { RoleMiddleware } from "./middleware/role.middleware";
 import { TestConnectionModule } from "./models/test-connection/test-connection.module";
@@ -41,18 +41,6 @@ export class AppModule
         consumer
             .apply(AuthMiddleware, RoleMiddleware(RoleList.ADMIN))
             .forRoutes({ path: "roles/create", method: RequestMethod.POST });
-
-        consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_CONTROL))
-            .forRoutes({ path: "user/*/", method: RequestMethod.DELETE });
-
-        consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
-            .forRoutes({ path: "user/role-to-user/*/", method: RequestMethod.DELETE });
-
-        consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
-            .forRoutes({ path: "user/role-to-user", method: RequestMethod.POST });
 
         consumer
             .apply(AuthMiddleware, RoleMiddleware(RoleList.VERIFIED))
@@ -94,6 +82,7 @@ export class AppModule
         // consumer
         // .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_POSITION))
         // .forRoutes({path: "position/:name", method: RequestMethod.DELETE});
+        //
     }
 }
 

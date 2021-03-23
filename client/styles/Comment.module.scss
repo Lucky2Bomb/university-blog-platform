@@ -1,0 +1,19 @@
+@import "./fonts.module.scss";
+@import "./colors.module.scss";
+
+.comment {
+    &__author {
+        @include SOURCE-SANS-PRO-BOLD-16($gray-700);
+    }
+    &__position {
+        @include SOURCE-SANS-PRO-BOLD-16($gray-700);
+    }
+
+    &__datetime {
+        @include SOURCE-SANS-PRO-BOLD-16($gray-500);
+    }
+
+    &__text {
+        @include ARIAL-REGULAR-14($gray-700);
+    }
+}

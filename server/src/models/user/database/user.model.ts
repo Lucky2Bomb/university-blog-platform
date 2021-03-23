@@ -3,6 +3,9 @@ import { UserRole } from '../../role/database/user-role.model';
 import { Position } from './position.model';
 import { Publication } from 'src/models/publication/database/publication.model';
 import { Bookmark } from 'src/models/publication/database/bookmark.model';
+import { Subscriber } from './subscriber.model';
+import { Comment } from 'src/models/publication/database/comment.model';
+import { PublicationComplaint } from './../../publication/database/publication-complaint.model';
 
 @Table
 export class User extends Model {
@@ -39,6 +42,15 @@ export class User extends Model {
 
     @BelongsTo(() => Position)
     position: Position;
+
+    @HasMany(() => Subscriber)
+    subscribers: Subscriber[]
+
+    @HasMany(() => Comment)
+    comments: Comment[]
+
+    @HasMany(() => PublicationComplaint)
+    publicationComplaints: PublicationComplaint[]
 
     @Column
     name: string;

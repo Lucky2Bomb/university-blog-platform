@@ -10,26 +10,59 @@ import { PositionController } from "./position.controller";
 import { PositionService } from "./position.service";
 import { Publication } from "../publication/database/publication.model";
 import { Bookmark } from "../publication/database/bookmark.model";
+import { Subscriber } from "./database/subscriber.model";
+import { AuthMiddleware } from "src/middleware/auth.middleware";
+import { RoleMiddleware } from "src/middleware/role.middleware";
+import { RoleList } from "../role/role-list";
+import { CompareBodyUserIdAndTokenMiddleware, AddUserIdInBodyMiddleware, PushUserIdInQueryByTokenMiddleware } from "src/middleware/user.middleware";
+import { Comment } from "../publication/database/comment.model";
+import { FileService } from "../file/file.service";
+import { PublicationService } from "../publication/publication.service";
+import { PublicationComplaint } from "../publication/database/publication-complaint.model";
 
 @Module({
-    imports: [SequelizeModule.forFeature([User, UserRole, Role, Position, Publication, Bookmark])],
+    imports: [SequelizeModule.forFeature([User, UserRole, Role, Position, Publication, Bookmark, Subscriber, Comment, PublicationComplaint])],
     controllers: [UserController, PositionController],
-    providers: [UserService, PositionService]
+    providers: [UserService, PositionService, FileService, PublicationService]
 })
 
-export class UserModule {
-// implements NestModule {
-//     configure(consumer: MiddlewareConsumer) {
-//         consumer
-//             .apply(CheckUserExistMiddleware)
-//             .forRoutes(
-//                 { path: "user/login", method: RequestMethod.POST },
-//                 { path: "user/:id", method: RequestMethod.GET },
-//                 { path: "user/:id", method: RequestMethod.DELETE },
-//                 { path: "user/user-roles/:idUser", method: RequestMethod.GET },
-//                 { path: "user/role-to-user/:id", method: RequestMethod.POST },
-//                 { path: "user/role-to-user/:id", method: RequestMethod.POST },
+export class UserModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
 
-//             );
-//     }
+        // consumer
+        //     .apply(AuthMiddleware)
+        //     .forRoutes({ path: "user/subscribe", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_CONTROL))
+            .forRoutes({ path: "user/*/", method: RequestMethod.DELETE });
+
+        consumer
+            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
+            .forRoutes({ path: "user/role-to-user/*/", method: RequestMethod.DELETE });
+
+        consumer
+            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
+            .forRoutes({ path: "user/role-to-user", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, CompareBodyUserIdAndTokenMiddleware)
+            .forRoutes({ path: "user/edit", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)
+            .forRoutes({ path: "user/upload-avatar", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)
+            .forRoutes({ path: "user/delete-avatar", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)
+            .forRoutes({ path: "user/upload-background", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)
+            .forRoutes({ path: "user/delete-background", method: RequestMethod.POST });
+    }
 }

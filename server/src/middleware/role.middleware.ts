@@ -8,14 +8,12 @@ export function RoleMiddleware(role) {
     return function (req, res, next: () => void) {
         {
             try {
-                if(req.isAdmin) {
-                    next();
-                }
-                const userRoles = req.userRoles;
+                const userRoles = req.body.userRoles;
                 if (!userRoles) {
                     throw new BadRequestException("нет доступа");
                 }
-                if (userRoles.includes(RoleList[role])) {
+
+                if (userRoles.indexOf(RoleList[role]) > -1 || userRoles.indexOf(RoleList.ADMIN) > -1) {
                     next();
                 } else {
                     throw new BadRequestException("нет доступа");
@@ -23,6 +21,7 @@ export function RoleMiddleware(role) {
 
 
             } catch (error) {
+                console.log(error);
                 throw new BadRequestException("нет доступа");
             }
         }

@@ -9,13 +9,20 @@ import { FileService, SectionType, FileType } from './../file/file.service';
 import { User } from "../user/database/user.model";
 import { Op } from "sequelize";
 import { EditPublicationDto } from "./dto/edit-publication.dto";
+import { RoleList } from "../role/role-list";
+import { Comment } from './database/comment.model';
+import { ReportPublicationDto } from "./dto/report-publication.dto";
+import { PublicationComplaint } from "./database/publication-complaint.model";
+import { report } from "process";
 
 
 @Injectable()
 export class PublicationService {
     constructor(
         @InjectModel(Publication) private publicationModel: typeof Publication,
+        @InjectModel(PublicationComplaint) private publicationComplaintModel: typeof PublicationComplaint,
         @InjectModel(User) private userModel: typeof User,
+        @InjectModel(Comment) private commentModel: typeof Comment,
         private fileService: FileService
     ) { }
 
@@ -44,8 +51,7 @@ export class PublicationService {
             }
 
             let publicationsIdArray;
-            if(publicationsId)
-            {
+            if (publicationsId) {
                 publicationsIdArray = JSON.parse(publicationsId);
                 if (publicationsIdArray.length > 0) {
                     where["id"] = {
@@ -67,6 +73,56 @@ export class PublicationService {
                 currentCount: Number(count),
                 offset: Number(offset)
             }
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+    async reportPublication(dto: ReportPublicationDto) {
+        try {
+            const publicationComplaint = await this.publicationComplaintModel.create({ ...dto });
+            return publicationComplaint;
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+    async checkReportPublication(reportsId: number[]) {
+        try {
+            const reports = await this.publicationComplaintModel.findAll({
+                where: {
+                    id: reportsId
+                }
+
+            })
+            await reports.map(item => {
+                item.checked = true;
+                item.save();
+            });
+            return reports;
+
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+    async getReports(count = 10, offset = 0, onlyNotChecked = false) {
+        try {
+            const where = {}
+            if(onlyNotChecked) {
+                where["checked"] = false
+            }
+
+            const reports = await this.publicationComplaintModel.findAndCountAll({
+                limit: Number(count <= config.pagination_settings.max_count ? count : config.pagination_settings.max_count),
+                offset: Number(offset),
+                order: [['createdAt', 'DESC']],
+                where
+            });
+            return reports;
         } catch (error) {
             console.log(error);
             throw new InternalServerErrorException("ошибка сервера");
@@ -176,7 +232,7 @@ export class PublicationService {
         return await this.editPublication(dto, token, picture, file, true);
     }
 
-    async deletePublication(id: number, token, accessToAnotherUser = false) {
+    async deleteMyPublication(id: number, token, accessToAnotherUser = false) {
         const publication = await this.publicationModel.findByPk(id);
         if (!publication) {
             throw new BadRequestException("пост не найден");
@@ -187,7 +243,9 @@ export class PublicationService {
                 throw new BadRequestException("не авторизован");
             }
             const decodedTokenData: IDecodedTokenStructure = jsonwebtoken.verify(token, config.secret_key);
-            if (publication.userId !== decodedTokenData.userId && !accessToAnotherUser) {
+            if ((publication.userId !== decodedTokenData.userId && !accessToAnotherUser) ||
+                !decodedTokenData.userRoles.find((item: string) => item === RoleList.ADMIN) ||
+                !decodedTokenData.userRoles.find((item: string) => item === RoleList.PUBLICATIONS)) {
                 throw new BadRequestException();
             }
 
@@ -198,6 +256,14 @@ export class PublicationService {
             if (publication.pictureUrl) {
                 await this.fileService.removeFile(publication.pictureUrl);
             }
+
+            const comments: Comment[] = await this.commentModel.findAll({
+                where: {
+                    publicationId: publication.id
+                }
+            });
+            console.log(comments);
+            comments.map(item => item.destroy());
 
             await publication.destroy();
 
@@ -210,6 +276,6 @@ export class PublicationService {
     }
 
     async deleteUserPublication(id: number, token) {
-        return this.deletePublication(id, token, true);
+        return this.deleteMyPublication(id, token, true);
     }
 }

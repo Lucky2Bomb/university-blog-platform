@@ -1,37 +1,34 @@
-import { IsEmail, Length } from "class-validator";
+import { IsEmail, Length, IsInt } from "class-validator";
 
 
 export class EditUserDto {
-    @Length(2, 50)
-    name?: string;
+
+    @IsInt()
+    userId: number;
 
     @Length(2, 50)
-    surname?: string;
+    name: string;
 
-    @Length(0, 50)
-    patronymic?: string;
+    @Length(2, 50)
+    surname: string;
+
+    patronymic: string;
 
     @IsEmail()
-    email?: string;
+    email: string;
 
     @Length(0, 255)
-    avatarUrl?: string;
+    vk: string;
 
     @Length(0, 255)
-    backgroundUrl?: string;
+    facebook: string;
 
     @Length(0, 255)
-    vk?: string;
-
-    @Length(0, 255)
-    facebook?: string;
-
-    @Length(0, 255)
-    telegram?: string;
+    telegram: string;
 
     @Length(0, 50)
-    whatsapp?: string;
+    whatsapp: string;
 
     @Length(0, 50)
-    phone_number?: string;
+    phone_number: string;
 }

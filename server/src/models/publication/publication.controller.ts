@@ -3,6 +3,7 @@ import { PublicationService } from './publication.service';
 import { CreatePublicationDto } from "./dto/create-publication.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { EditPublicationDto } from "./dto/edit-publication.dto";
+import { ReportPublicationDto } from "./dto/report-publication.dto";
 
 @Controller("/publication")
 export class PublicationController {
@@ -55,6 +56,28 @@ export class PublicationController {
         return this.publicationService.editPublication(dto, authorization.split(' ')[1], picture, file);
     }
 
+    @Post("/report")
+    reportPublication(
+        @Body() dto: ReportPublicationDto
+    ) {
+        return this.publicationService.reportPublication(dto);
+    }
+
+    @Post("/report/checked")
+    checkReportPublication(
+        @Body("reportsId") reportsId: number[]
+    ) {
+        return this.publicationService.checkReportPublication(reportsId);
+    }
+
+    @Get("/report/all")
+    getReports(
+        @Query("count") count?: number,
+        @Query("offset") offset?: number,
+        @Query("onlyNotChecked") onlyNotChecked?: boolean
+    ) {
+        return this.publicationService.getReports(count, offset, onlyNotChecked);
+    }
 
     @Post("/edit-user-publication")
     @UseInterceptors(FileFieldsInterceptor([
@@ -72,11 +95,11 @@ export class PublicationController {
 
 
     @Delete("/delete-publication/:id")
-    deletePublication(
+    deleteMyPublication(
         @Param("id") id: number,
         @Headers("Authorization") authorization: string
     ) {
-        return this.publicationService.deletePublication(id, authorization.split(' ')[1]);
+        return this.publicationService.deleteMyPublication(id, authorization.split(' ')[1]);
     }
 
     @Delete("/delete-user-publication/:id")

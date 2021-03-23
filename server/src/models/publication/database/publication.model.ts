@@ -1,6 +1,8 @@
 import { Column, Model, Table, HasMany, ForeignKey, BelongsTo, DataType } from 'sequelize-typescript';
 import { User } from 'src/models/user/database/user.model';
 import { Bookmark } from './bookmark.model';
+import { Comment } from './comment.model';
+import { PublicationComplaint } from './publication-complaint.model';
 
 @Table
 export class Publication extends Model {
@@ -38,6 +40,12 @@ export class Publication extends Model {
 
     @HasMany(() => Bookmark)
     bookmarks: Bookmark[]
+
+    @HasMany(() => Comment)
+    comments: Comment[]
+
+    @HasMany(() => PublicationComplaint)
+    publicationComplaints: PublicationComplaint[]
 
     @ForeignKey(() => User)
     @Column

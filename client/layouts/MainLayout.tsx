@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Grid } from '@material-ui/core';
 import styles from "../styles/MainLayout.module.scss";
 import globalStyles from "../styles/global.js";
 import Head from 'next/head';
+import { observer } from 'mobx-react-lite';
 import rootStore from '../store/rootStore';
+import { checkRelevanceOfToken } from '../requests/auth/test-connection';
+import { getUserRoles } from '../requests/role/get-user-roles';
+import { config } from 'process';
+import { RoleList } from '../other/role-list';
 
 interface IMainLayoutProps {
     title?: string;
@@ -11,12 +16,33 @@ interface IMainLayoutProps {
     keywords?: string;
 }
 
-const MainLayout: React.FC<IMainLayoutProps> = ({
+const MainLayout: React.FC<IMainLayoutProps> = observer(({
     title,
     children,
     description,
     keywords
 }) => {
+    const { setAuth } = rootStore.authStore;
+    const { setRoles } = rootStore.myProfile;
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            checkRelevanceOfToken(localStorage.getItem("token"))
+                .then(value => {
+                    setAuth(value);
+                    if (!value) {
+                        setAuth(value);
+                        localStorage.removeItem("token");
+                    }
+                    getUserRoles(localStorage.getItem("token"))
+                        .then(value => {
+                            if (typeof value.map !== "undefined") {
+                                setRoles(value.map(item => RoleList[item.roleName]));
+                            }
+                        });
+                });
+
+        }
+    }, []);
     return (
         <>
             <Head>
@@ -40,6 +66,6 @@ const MainLayout: React.FC<IMainLayoutProps> = ({
 
         </>
     )
-}
+});
 
 export default MainLayout;

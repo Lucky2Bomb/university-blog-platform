@@ -9,10 +9,6 @@ export default class AuthStore implements IAuthStore {
     token: string = "";
     isAuth: boolean = false;
 
-    setToken = (token: string): void => {
-        this.token = token;
-    }
-
     setAuth = (value: boolean): void => {
         this.isAuth = value;
     }

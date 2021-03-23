@@ -11,20 +11,20 @@ import { checkRelevanceOfToken } from '../requests/auth/test-connection';
 export const Navbar = observer(() => {
     const { isAuth, setAuth } = rootStore.authStore;
     const router = useRouter();
-    useEffect(() => {
-        const { isAuth, setAuth } = rootStore.authStore;
-        if (localStorage.getItem("token")) {
-            checkRelevanceOfToken(localStorage.getItem("token"))
-                .then(value => {
-                    setAuth(value);
-                    if (!value) {
-                        setAuth(value);
-                        localStorage.removeItem("token");
-                    }
-                });
-        }
+    // useEffect(() => {
+    //     const { isAuth, setAuth } = rootStore.authStore;
+    //     if (localStorage.getItem("token")) {
+    //         checkRelevanceOfToken(localStorage.getItem("token"))
+    //             .then(value => {
+    //                 setAuth(value);
+    //                 if (!value) {
+    //                     setAuth(value);
+    //                     localStorage.removeItem("token");
+    //                 }
+    //             });
+    //     }
 
-    }, []);
+    // }, []);
     const styleNavbarContainer = router.pathname === "/" ? styles.navbar__container_special_style : styles.navbar__container;
     const styleLeftBlock = router.pathname === "/" ? styles.navbar__left_block_special_style : styles.navbar__left_block;
     const styleRightBlock = router.pathname === "/" ? styles.navbar__right_block_special_style : styles.navbar__right_block;
@@ -34,7 +34,7 @@ export const Navbar = observer(() => {
         <div className={styleNavbarContainer}>
             <div className={styleLeftBlock}>
                 <NavbarItem href="/" text="Главная" className={router.pathname === "/" ? styleNavbarItemActive : styleNavbarItem} />
-                <NavbarItem href="/news" text="Новости" className={router.pathname === "/news" ? styleNavbarItemActive : styleNavbarItem} />
+                <NavbarItem href="/news" text="Новости университета" className={router.pathname === "/news" ? styleNavbarItemActive : styleNavbarItem} />
             </div>
 
             <div className={styleRightBlock}>

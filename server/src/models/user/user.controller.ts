@@ -1,14 +1,58 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UseInterceptors, UploadedFiles } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AddRoleToUser } from './dto/add-role-to-user.dto';
 import { MyProfileDto } from './dto/my-profile.dto';
+import { EditUserDto } from "./dto/edit-user.dto";
+import { SubscribeDto } from "./dto/subscribe.dto";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { FileType, SectionType } from "../file/file.service";
 
 @Controller("/user")
 export class UserController {
 
     constructor(private userService: UserService) { }
+
+    @Get("/subscribe/:id")
+    checkCountSubscribes(
+        @Param("id") id: number
+    ) {
+        return this.userService.checkCountSubscribes(id);
+    }
+
+    @Get("/subscriptions/publications")
+    publishingSubscriptions(
+        @Query("userId") userId: number,
+        @Query("count") count?: number,
+        @Query("offset") offset?: number
+    ) {
+        return this.userService.publishingSubscriptions(userId, count, offset);
+    }
+    
+    @Get("/subscriptions/users")
+    subscriptionsUsers(
+        @Query("userId") userId: number,
+        @Query("count") count?: number,
+        @Query("offset") offset?: number
+        ) {
+        return this.userService.subscriptionsUsers(userId);
+    }
+
+    @Post("/subscribe")
+    subscribe(@Body() dto: SubscribeDto) {
+        return this.userService.subscribe(dto);
+    }
+
+    @Post("/unsubscribe")
+    unsubscribe(@Body() dto: SubscribeDto) {
+        return this.userService.unsubscribe(dto);
+    }
+
+    @Post("/check-subscribe")
+    checkSubscribe(@Body() dto: SubscribeDto) {
+        return this.userService.checkSubscribe(dto);
+    }
 
     @Post("/create")
     create(@Body() dto: CreateUserDto) {
@@ -53,6 +97,13 @@ export class UserController {
     ) {
         return this.userService.getUserRoles(idUser);
     }
+    
+    @Post("/user-roles")
+    getUserRolesByToken(
+        @Body("token") token: string
+    ) {
+        return this.userService.getUserRolesByToken(token);
+    }
 
     @Post("/role-to-user")
     addRoleToUser(@Body() dto: AddRoleToUser) {
@@ -74,7 +125,48 @@ export class UserController {
     }
 
     @Post("/edit")
-    edit() {
+    edit(
+        @Body() editUserDto: EditUserDto
+    ) {
+        return this.userService.edit(editUserDto);
+    }
 
+    @Post("/upload-avatar")
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'picture', maxCount: 1 }
+    ]))
+
+    addAvatar(
+        @UploadedFiles() files,
+        @Query("userId") userId: number
+    ) {
+        const { picture } = files;
+        return this.userService.uploadImage(picture, userId, SectionType.PROFILE_AVATAR);
+    }
+
+    @Post("/delete-avatar")
+    deleteAvatar(
+        @Query("userId") userId: number
+    ) {
+        return this.userService.deleteImage(userId, SectionType.PROFILE_AVATAR);
+    }
+
+    @Post("/upload-background")
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'picture', maxCount: 1 }
+    ]))
+    addBackground(
+        @UploadedFiles() files,
+        @Query("userId") userId: number
+    ) {
+        const { picture } = files;
+        return this.userService.uploadImage(picture, userId, SectionType.PROFILE_BACKGROUND);
+    }
+
+    @Post("/delete-background")
+    deleteBackground(
+        @Query("userId") userId: number
+    ) {
+        return this.userService.deleteImage(userId, SectionType.PROFILE_BACKGROUND);
     }
 }

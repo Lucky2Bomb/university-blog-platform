@@ -8,7 +8,7 @@ interface NavbarItemProps {
     className: string;
 }
 
-export const NavbarItem: React.FC<NavbarItemProps> = ({href, text, className}) => {
+export const NavbarItem: React.FC<NavbarItemProps> = ({ href, text, className }) => {
     const router = useRouter();
     return (
         <Link href={href}>

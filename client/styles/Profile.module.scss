@@ -1,0 +1,77 @@
+@import "./fonts.module.scss";
+@import "./colors.module.scss";
+
+.profile {
+    &__wrapper {
+        border: 1px solid $gray-200;
+        position: absolute;
+        margin: 0 0 0 40px;
+        top: 385px;
+        padding: 30px 50px;
+        background: $white;
+    }
+
+    &__avatar_upload {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @include ARIAL-BOLD-16($transparent);
+        width: 150px;
+        height: 150px;
+        position: absolute;
+        top: 30px;
+        transition-duration: .2s;
+        & p {
+            text-align: center;
+        }
+        &:hover {
+            cursor: pointer;
+            color: $gray-000;
+            background-color: rgba(0,0,0, 0.5);
+        }
+    }
+
+    &__background_upload {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        width: 1232px;
+        max-width: 95%;
+        height: 250px;
+        @include SOURCE-SANS-PRO-BOLD-28($transparent);
+        transition-duration: .2s;
+        &:hover {
+            cursor: pointer;
+            color: $gray-000;
+            background-color: rgba(0,0,0, 0.5);
+        }
+    }
+
+    &__surname, &__name, &__patronymic {
+        text-align: center;
+        color: $gray-700;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    &__position_name {
+        margin: 5px 0;
+
+        @include ARIAL-REGULAR-12($gray-400);
+
+        text-align: center;
+    }
+
+    &__readers {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+
+        @include ARIAL-REGULAR-12($gray-700);
+
+        &_count {
+            font-weight: bold;
+        }
+    }
+}

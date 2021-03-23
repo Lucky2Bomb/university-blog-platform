@@ -3,105 +3,31 @@ import { Grid, Link } from '@material-ui/core';
 import styles from '../styles/Footer.module.scss';
 import { NewsSmallCardItem } from './NewsSmallCardItem';
 import { IPublication } from '../types/Publication';
+import config from '../config';
 
 interface CardWithSmallCardItemsProps {
     publications: IPublication[];
 }
 
 export const CardWithSmallCardItems: React.FC<CardWithSmallCardItemsProps> = ({ publications }) => {
-
+    let everySecond = true;
+    let smallCardItems = publications.map(publication => {
+        everySecond = !everySecond;
+        return <Grid item xs={6} paddingRight={!everySecond ? "10px" : "0"} paddingLeft={everySecond ? "10px" : "0"} paddingBottom="40px" key={`0${publication.id}`}>
+            <NewsSmallCardItem
+                header={publication.header}
+                datetime={new Date(publication.createdAt)}
+                src={`${config.serverURL}/${publication.pictureUrl ? publication.pictureUrl : "no-image.jpg"}`}
+                href={`/news/${publication.id}`}
+                key={publication.id}
+                fileUrl={`${publication.fileUrl}`}
+            />
+        </Grid>
+    });
     return (
         <>
-            <Grid item xs={6} paddingRight="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
+            {smallCardItems}
 
-            <Grid item xs={6} paddingLeft="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingRight="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingLeft="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingRight="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingLeft="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingRight="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingLeft="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingRight="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-
-            <Grid item xs={6} paddingLeft="10px" paddingBottom="40px">
-                <NewsSmallCardItem
-                    header="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec turpis ex, laoreet at orci at, lobortis condimentum tellus."
-                    src={"https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"}
-                    datetime={new Date(2021, 0, 1)}
-                    href={"/"}
-                />
-            </Grid>
-            
             <Grid item xs={12}>
                 <hr />
             </Grid>

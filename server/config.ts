@@ -7,6 +7,10 @@ export default {
             //in bytes
             max_picture_size: 5242880,
             max_file_size: 15728640,
+        },
+        profile: {
+            max_avatar_size: 1048576,
+            max_background_size: 2097152
         }
     },
     database: {
