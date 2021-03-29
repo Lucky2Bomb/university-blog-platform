@@ -29,6 +29,16 @@
     }
 }
 
+.style_separator {
+    &__item {
+        padding: 0 5px;
+        border-left: 1px solid $gray-300;
+        &:last-child {
+            border-right: 1px solid $gray-300;
+        }
+    }
+}
+
 .text {
     &__h1 {
         @include OSWALD-REGULAR-64-H1($gray-700);

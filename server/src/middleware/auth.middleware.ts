@@ -24,6 +24,7 @@ export async function AuthMiddleware(req, res, next: () => void) {
                 next();
             }
             req.body.userRoles = decodedTokenData.userRoles;
+            req.body.isAdmin = false;
             next();
         } catch (error) {
             console.log(error)

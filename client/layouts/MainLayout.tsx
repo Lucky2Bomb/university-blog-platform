@@ -35,7 +35,7 @@ const MainLayout: React.FC<IMainLayoutProps> = observer(({
                     }
                     getUserRoles(localStorage.getItem("token"))
                         .then(value => {
-                            if (typeof value.map !== "undefined") {
+                            if (typeof value !== "undefined") {
                                 setRoles(value.map(item => RoleList[item.roleName]));
                             }
                         });

@@ -14,6 +14,9 @@ import { DownloadButton } from '../../components/DownloadButton';
 import { Comments } from '../../components/Comments';
 import { Footer } from '../../components/Footer';
 import { convertDateToDD_MM_YYYY } from '../../other/convertTime';
+import rootStore from '../../store/rootStore';
+import { RoleList } from '../../other/role-list';
+import { ReportPublication } from '../../components/ReportPublication';
 
 const NewsMorePage = ({ serverPublicationData }) => {
     const { header, createdAt, text, author, userId, fileUrl, id } = serverPublicationData;
@@ -25,11 +28,12 @@ const NewsMorePage = ({ serverPublicationData }) => {
             <NavbarLayout>
                 <HeaderLayout headerText={"НОВОСТИ"}>
                     <Grid container gap={2}>
-                        <Grid container item paddingTop="20px" xs={12}>
+                        <Grid container item paddingTop="20px" justifyContent="space-between" xs={12}>
                             <Button
                                 onClick={() => Router.push("/news")}
                                 variant="outlined"
                             > Назад </Button>
+                            <ReportPublication publicationId={id}/>
                         </Grid>
                         <Grid container item xs={12}>
                             <img src={`${config.serverURL}/${serverPublicationData.pictureUrl}`} alt=""
@@ -54,7 +58,7 @@ const NewsMorePage = ({ serverPublicationData }) => {
                             <Grid container direction="row" justifyContent="space-between">
                                 {fileUrl && <DownloadButton href={`${config.serverURL}/${fileUrl}`} text={"скачать прикреплённый файл"} />}
                             </Grid>
-                            <Comments publicationId={id}/>
+                            <Comments publicationId={id} />
 
                             <Grid item xs={12}>
                                 <Footer />

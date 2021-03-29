@@ -8,6 +8,7 @@ import { EditUserDto } from "./dto/edit-user.dto";
 import { SubscribeDto } from "./dto/subscribe.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { FileType, SectionType } from "../file/file.service";
+import { AddRoleToUsers } from "./dto/add-role-to-users.dto";
 
 @Controller("/user")
 export class UserController {
@@ -29,15 +30,25 @@ export class UserController {
     ) {
         return this.userService.publishingSubscriptions(userId, count, offset);
     }
-    
+
     @Get("/subscriptions/users")
     subscriptionsUsers(
         @Query("userId") userId: number,
         @Query("count") count?: number,
         @Query("offset") offset?: number
-        ) {
-        return this.userService.subscriptionsUsers(userId);
+    ) {
+        return this.userService.subscriptionsUsers(userId, count, offset);
     }
+
+    @Get("/subscribers")
+    subscribersUser(
+        @Query("userId") userId: number,
+        @Query("count") count?: number,
+        @Query("offset") offset?: number
+    ) {
+        return this.userService.subscribersUser(userId, count, offset);
+    }
+
 
     @Post("/subscribe")
     subscribe(@Body() dto: SubscribeDto) {
@@ -76,6 +87,15 @@ export class UserController {
     ) {
         return this.userService.getAll(count, offset);
     }
+    
+    @Get("/list-with-include")
+    getAllWithTables(
+        @Query("count") count?: number,
+        @Query("offset") offset?: number,
+        @Query("tables") tables?: string
+    ) {
+        return this.userService.getAllWithTables(count, offset, tables);
+    }
 
     @Get("/:id")
     getOne(
@@ -97,7 +117,7 @@ export class UserController {
     ) {
         return this.userService.getUserRoles(idUser);
     }
-    
+
     @Post("/user-roles")
     getUserRolesByToken(
         @Body("token") token: string
@@ -108,6 +128,11 @@ export class UserController {
     @Post("/role-to-user")
     addRoleToUser(@Body() dto: AddRoleToUser) {
         return this.userService.addRoleToUser(dto);
+    }
+
+    @Post("/role-to-users")
+    addRoleToUsers(@Body() dto: AddRoleToUsers) {
+        return this.userService.addRoleToUsers(dto);
     }
 
     @Delete("/role-to-user/:idUserRole")

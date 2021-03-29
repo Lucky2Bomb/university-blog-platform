@@ -68,9 +68,9 @@ export const Comments: React.FC<CommentsProps> = observer(({ publicationId, row 
                 <Button onClick={loadComments} disabled={isDisabledMoreButton}>Загрузить комментарии</Button>
             </Grid>
 
-            {(
-                checkRoleInArray(roles, RoleList.ADMIN) ||
-                checkRoleInArray(roles, RoleList.VERIFIED)
+            {(typeof roles !== "undefined" &&
+                (checkRoleInArray(roles, RoleList.ADMIN) ||
+                    checkRoleInArray(roles, RoleList.VERIFIED))
             ) && <Grid container marginTop="10px">
                     <TextField
                         id="outlined-multiline-flexible"

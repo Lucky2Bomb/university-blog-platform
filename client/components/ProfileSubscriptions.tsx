@@ -6,12 +6,14 @@ import config from '../config';
 import { getListSubscriptions } from './../requests/user/get-list-subscriptions';
 import { Loading } from './Loading';
 import { ProfileSubscriptionCard } from './ProfileSubscriptionCard';
+import { getListSubscribers } from './../requests/user/get-list-subscribers';
 
 interface ProfileSubscriptionsProps {
     profile: IProfile;
+    isSubscribers?: boolean;
 }
 
-export const ProfileSubscriptions: React.FC<ProfileSubscriptionsProps> = ({ profile }) => {
+export const ProfileSubscriptions: React.FC<ProfileSubscriptionsProps> = ({ profile, isSubscribers = false }) => {
     const [users, setUsers] = useState([]);
     const [allCount, setAllCount] = useState(11);
     const [currentCount, setCurrentCount] = useState(10);
@@ -19,7 +21,7 @@ export const ProfileSubscriptions: React.FC<ProfileSubscriptionsProps> = ({ prof
     const [isDisabledMoreButton, setIsDisabledMoreButton] = useState(false);
 
     let userCards;
-    const getMore = () => {
+    const getMoreSubscriptions = () => {
         getListSubscriptions(profile.id, currentCount, offset).then((item) => {
             setUsers([...users, ...item.users]);
             setAllCount(item.allCount);
@@ -31,8 +33,20 @@ export const ProfileSubscriptions: React.FC<ProfileSubscriptionsProps> = ({ prof
         });
     }
 
+    const getMoreSubscribers = () => {
+        getListSubscribers(profile.id, currentCount, offset).then((item) => {
+            setUsers([...users, ...item.users]);
+            setAllCount(item.allCount);
+            setCurrentCount(item.currentCount);
+            setOffset(item.offset + currentCount);
+            if (offset >= allCount) {
+                setIsDisabledMoreButton(true);
+            }
+        });
+    }
+
     useEffect(() => {
-        getMore();
+        isSubscribers? getMoreSubscriptions() : getMoreSubscribers();
     }, []);
 
     if (users) {
@@ -49,7 +63,7 @@ export const ProfileSubscriptions: React.FC<ProfileSubscriptionsProps> = ({ prof
                 {userCards}
             </Grid>
             <Grid container justifyContent="center">
-                <Button disabled={isDisabledMoreButton} onClick={getMore}>Загрузить больше</Button>
+                <Button disabled={isDisabledMoreButton} onClick={getMoreSubscriptions}>Загрузить больше</Button>
             </Grid>
         </div>
     )

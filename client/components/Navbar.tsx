@@ -31,7 +31,7 @@ export const Navbar = observer(() => {
     const styleNavbarItem = router.pathname === "/" ? styles.navbar__item_special_style : styles.navbar__item;
     const styleNavbarItemActive = router.pathname === "/" ? styles.navbar__item_special_style_active : styles.navbar__item_active;
     return (
-        <div className={styleNavbarContainer}>
+        <nav className={styleNavbarContainer}>
             <div className={styleLeftBlock}>
                 <NavbarItem href="/" text="Главная" className={router.pathname === "/" ? styleNavbarItemActive : styleNavbarItem} />
                 <NavbarItem href="/news" text="Новости университета" className={router.pathname === "/news" ? styleNavbarItemActive : styleNavbarItem} />
@@ -52,6 +52,6 @@ export const Navbar = observer(() => {
                     }}>Выход</a>
                 </>}
             </div>
-        </div>
+        </nav>
     )
 });

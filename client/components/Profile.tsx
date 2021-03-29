@@ -55,7 +55,7 @@ export const Profile: React.FC<ProfileProps> = ({ profile, isMyProfile }) => {
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                             <Tab label="Блог" {...a11yProps(0)} />
                             <Tab label="Профиль" {...a11yProps(1)} />
-                            <Tab label="Сообщения" {...a11yProps(2)} />
+                            <Tab label="Подписчики" {...a11yProps(2)} />
                             <Tab label="Читаемые" {...a11yProps(3)} />
                             <Tab label="Лента новостей" {...a11yProps(4)} />
                             {isMyProfile && <Tab label="Настройки" {...a11yProps(5)} />}
@@ -69,7 +69,7 @@ export const Profile: React.FC<ProfileProps> = ({ profile, isMyProfile }) => {
                         <ProfileInfo profile={profile} />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        Item Three
+                        <ProfileSubscriptions profile={profile} isSubscribers={true}/>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
                         <ProfileSubscriptions profile={profile}/>

@@ -10,7 +10,7 @@ import { BookmarkController } from "./bookmark.controller";
 import { BookmarkService } from "./bookmark.service";
 import { Comment } from "./database/comment.model";
 import { AuthMiddleware } from "../../middleware/auth.middleware";
-import { AddUserIdInBodyMiddleware, CompareBodyUserIdAndTokenMiddleware } from "../../middleware/user.middleware";
+import { AddUserIdInBodyMiddleware,  } from "../../middleware/user.middleware";
 import { RoleMiddleware } from "../../middleware/role.middleware";
 import { RoleList } from "../role/role-list";
 import { CommentController } from "./comment.controller";
@@ -35,7 +35,7 @@ export class PublicationModule
             .forRoutes({path: "comment/delete/*", method: RequestMethod.DELETE});
             
             consumer
-            .apply(AuthMiddleware, CompareBodyUserIdAndTokenMiddleware)
+            .apply(AuthMiddleware, AddUserIdInBodyMiddleware, RoleMiddleware(RoleList.VERIFIED))
             .forRoutes({path: "publication/report", method: RequestMethod.POST});
 
             consumer

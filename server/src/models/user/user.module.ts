@@ -19,9 +19,13 @@ import { Comment } from "../publication/database/comment.model";
 import { FileService } from "../file/file.service";
 import { PublicationService } from "../publication/publication.service";
 import { PublicationComplaint } from "../publication/database/publication-complaint.model";
+import { Group } from "../university/database/group.model";
+import { University } from "../university/database/university.model";
+import { Specialty } from "../university/database/specialty.model";
+import { Faculty } from "../university/database/faculty.model";
 
 @Module({
-    imports: [SequelizeModule.forFeature([User, UserRole, Role, Position, Publication, Bookmark, Subscriber, Comment, PublicationComplaint])],
+    imports: [SequelizeModule.forFeature([User, UserRole, Role, Position, Publication, Bookmark, Subscriber, Comment, PublicationComplaint, Group, University, Faculty, Specialty])],
     controllers: [UserController, PositionController],
     providers: [UserService, PositionService, FileService, PublicationService]
 })
@@ -44,6 +48,10 @@ export class UserModule implements NestModule {
         consumer
             .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
             .forRoutes({ path: "user/role-to-user", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
+            .forRoutes({ path: "user/role-to-users", method: RequestMethod.POST });
 
         consumer
             .apply(AuthMiddleware, CompareBodyUserIdAndTokenMiddleware)

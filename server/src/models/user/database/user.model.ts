@@ -6,6 +6,7 @@ import { Bookmark } from 'src/models/publication/database/bookmark.model';
 import { Subscriber } from './subscriber.model';
 import { Comment } from 'src/models/publication/database/comment.model';
 import { PublicationComplaint } from './../../publication/database/publication-complaint.model';
+import { Group } from './../../university/database/group.model';
 
 @Table
 export class User extends Model {
@@ -51,6 +52,13 @@ export class User extends Model {
 
     @HasMany(() => PublicationComplaint)
     publicationComplaints: PublicationComplaint[]
+
+    @ForeignKey(() => Group)
+    @Column
+    groupId: number;
+
+    @BelongsTo(() => Group)
+    group: Group;
 
     @Column
     name: string;

@@ -20,6 +20,9 @@ import { SubscribeDto } from "./dto/subscribe.dto";
 import { FileService, SectionType, FileType } from "../file/file.service";
 import { Publication } from "../publication/database/publication.model";
 import { PublicationService } from './../publication/publication.service';
+import { Group } from "../university/database/group.model";
+import { tablesList } from "./interface/Tables-list";
+import { AddRoleToUsers } from "./dto/add-role-to-users.dto";
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -37,6 +40,7 @@ export class UserService {
         @InjectModel(Position) private positionModel: typeof Position,
         @InjectModel(Subscriber) private subscriberModel: typeof Subscriber,
         @InjectModel(Publication) private publicationModel: typeof Publication,
+        @InjectModel(Group) private groupModel: typeof Group,
         private fileService: FileService,
         private publcationService: PublicationService
     ) { }
@@ -116,6 +120,42 @@ export class UserService {
         }
     }
 
+
+    async getAllWithTables(count: number = 10, offset: number = 0, tables: string = ""): Promise<IUserPageList> {
+
+        try {
+
+            const arrTables = JSON.parse(tables) as string[];
+            const includes = [];
+            if (arrTables.indexOf(tablesList.GROUP) > -1) {
+                includes.push(Group);
+            }
+
+            if (arrTables.indexOf(tablesList.ROLE) > -1) {
+                includes.push(UserRole);
+            }
+
+            const users = await this.userModel.findAndCountAll({
+                limit: Number(count <= config.pagination_settings.max_count ? count : config.pagination_settings.max_count),
+                offset: Number(offset),
+                order: [['createdAt', 'DESC']],
+                include: includes
+            });
+            const usersAllCount = await this.userModel.count();
+
+            return {
+                users: users.rows,
+                allCount: usersAllCount,
+                currentCount: Number(count),
+                offset: Number(offset)
+            }
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+
     async getOne(id: number): Promise<User> {
         try {
             const user = await this.userModel.findByPk(id);
@@ -162,6 +202,25 @@ export class UserService {
             const userRole = await this.userRoleModel.create({ roleName: role.name, userId: user.id });
 
             return { message: `роль ${role.name} добавлена пользователю ${user.username}` };
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+    async addRoleToUsers(dto: AddRoleToUsers): Promise<object> {
+        try {
+            if (dto.usersId.length < 1) {
+                throw new InternalServerErrorException("массив ролей пуст");
+            }
+            const arrUserRoles = [];
+            await dto.usersId.map(async value => {
+                if (!await this.userRoleModel.findOne({ where: { userId: Number(value), roleName: dto.roleName } })) {
+                    [].push(await this.userRoleModel.create({ roleName: dto.roleName, userId: Number(value) }));
+                }
+            });
+
+            return arrUserRoles;
         } catch (error) {
             console.log(error);
             throw new InternalServerErrorException("ошибка сервера");
@@ -428,6 +487,22 @@ export class UserService {
                 }
             });
             const usersId = subscriptionsArray.map(item => item.userId);
+            const users = await this.getAll(count, offset, { id: usersId }, { exclude: ["password"] });
+            return users;
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+    async subscribersUser(userId: number, count: number = 10, offset: number = 0) {
+        try {
+            const subscribers = await this.subscriberModel.findAll({
+                where: {
+                    userId: Number(userId)
+                }
+            });
+            const usersId = subscribers.map(item => item.subscriberId);
             const users = await this.getAll(count, offset, { id: usersId }, { exclude: ["password"] });
             return users;
         } catch (error) {

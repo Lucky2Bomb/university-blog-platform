@@ -11,20 +11,22 @@ import { AddUserIdInBodyMiddleware, CompareQueryUserIdAndTokenMiddleware, PushUs
 import { AuthMiddleware } from "./middleware/auth.middleware";
 import { RoleMiddleware } from "./middleware/role.middleware";
 import { TestConnectionModule } from "./models/test-connection/test-connection.module";
+import { UniversityModule } from './models/university/university.module';
 
 const { host, port, username, password, database, timezone } = config.database;
 
 @Module({
     imports: [
-        ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static'), }),
+    ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static'), }),
         SequelizeModule.forRoot({
             dialect: 'mysql',
             host, port, username, password, database, timezone,
             autoLoadModels: true,
             synchronize: true
         }),
-        UserModule, RoleModule, PublicationModule, TestConnectionModule
-    ]
+        UserModule, RoleModule, PublicationModule, TestConnectionModule, UniversityModule
+    ],
+    providers: []
 })
 
 export class AppModule

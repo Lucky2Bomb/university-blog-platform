@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from '../styles/Common.module.scss';
-import DownloadLink from "react-download-link";
 
 interface DownloadButtonProps {
     href: string;

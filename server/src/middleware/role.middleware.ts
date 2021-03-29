@@ -4,16 +4,18 @@ import { Request, Response } from 'express';
 import { RoleList } from "src/models/role/role-list";
 const jsonwebtoken = require('jsonwebtoken');
 
-export function RoleMiddleware(role) {
-    return function (req, res, next: () => void) {
+export function RoleMiddleware(role: RoleList) {
+    return async function (req, res, next: () => void) {
         {
             try {
-                const userRoles = req.body.userRoles;
+                const userRoles: RoleList[] = await req.body.userRoles;
                 if (!userRoles) {
                     throw new BadRequestException("нет доступа");
                 }
 
-                if (userRoles.indexOf(RoleList[role]) > -1 || userRoles.indexOf(RoleList.ADMIN) > -1) {
+                let isRole = false;
+                userRoles.forEach(roleItem => isRole = (roleItem === RoleList.ADMIN) || (roleItem === role));
+                if (isRole) {
                     next();
                 } else {
                     throw new BadRequestException("нет доступа");

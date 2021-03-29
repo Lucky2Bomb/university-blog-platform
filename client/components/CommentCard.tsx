@@ -1,12 +1,8 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { Grid } from '@material-ui/core';
 import styles from '../styles/Comment.module.scss';
-import { MoreDetailsButton } from './MoreDetailsButton';
-import DownloadIcon from '@material-ui/icons/Download';
 import { IComment } from './../types/Comment';
 import { convertDateToDD_MM_YYYY, convertDateToHH_MM } from '../other/convertTime';
-import config from '../config';
 import Position from './Position';
 
 interface CommentCardProps {

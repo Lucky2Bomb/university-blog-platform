@@ -2,10 +2,10 @@ import axios from "axios";
 import config from "../../config";
 import { IReport } from "../../types/Report";
 
-export const reportPublication = async (userId: number, publicationId: number, token: string): Promise<IReport> => {
+export const reportPublication = async (publicationId: number, token: string): Promise<IReport> => {
     try {
         const request = `${config.serverURL}/publication/report`;
-        const response = await axios.post(request, { publicationId, userId }, {
+        const response = await axios.post(request, { publicationId }, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
