@@ -22,23 +22,23 @@ export class UniversityModule
     implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.UNIVERSITY))
-            .forRoutes({ path: "university/:type", method: RequestMethod.POST });
+            .apply(AuthMiddleware)
+            .forRoutes({ path: "university/*", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.UNIVERSITY))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "university/:type/:name", method: RequestMethod.DELETE });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.UNIVERSITY))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "university/group/create", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.UNIVERSITY))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "university/group/edit", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.UNIVERSITY))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "university/group/delete/:id", method: RequestMethod.DELETE });
 
         consumer

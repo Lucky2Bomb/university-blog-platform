@@ -27,23 +27,23 @@ export class PublicationModule
     implements NestModule {
         configure(consumer: MiddlewareConsumer) {
             consumer
-            .apply(AuthMiddleware, AddUserIdInBodyMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware, AddUserIdInBodyMiddleware)
             .forRoutes({path: "comment/create", method: RequestMethod.POST});
             
             consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_COMMENT))
+            .apply(AuthMiddleware)
             .forRoutes({path: "comment/delete/*", method: RequestMethod.DELETE});
             
             consumer
-            .apply(AuthMiddleware, AddUserIdInBodyMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware, AddUserIdInBodyMiddleware)
             .forRoutes({path: "publication/report", method: RequestMethod.POST});
 
             consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.PUBLICATIONS))
+            .apply(AuthMiddleware)
             .forRoutes({path: "publication/report/checked", method: RequestMethod.POST});
 
             consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.PUBLICATIONS))
+            .apply(AuthMiddleware)
             .forRoutes({path: "publication/report/all", method: RequestMethod.GET});
         }
 }

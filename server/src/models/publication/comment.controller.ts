@@ -1,7 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UploadedFiles, UseInterceptors, Headers } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UploadedFiles, UseInterceptors, Headers, UseGuards } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
+import { RoleList } from "../role/role-list";
+import { Roles } from "../role/role.decorator";
+import { RolesGuard } from "../role/roles.guard";
 
+@UseGuards(RolesGuard)
 @Controller("/comment")
 export class CommentController {
 
@@ -17,6 +21,7 @@ export class CommentController {
     }
 
     @Post("/create")
+    @Roles(RoleList.VERIFIED)
     create(
         @Body() dto: CreateCommentDto
     ) {
@@ -24,6 +29,7 @@ export class CommentController {
     }
     
     @Delete("/delete/:id")
+    @Roles(RoleList.USER_COMMENT)
     delete(
         @Param("id") id: number
     ) {

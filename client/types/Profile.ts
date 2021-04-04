@@ -1,5 +1,5 @@
 import { RoleList } from '../other/role-list';
-import { IRole } from './Role';
+import { IUserRole } from './Role';
 import { IGroup } from './University';
 
 export interface IMyProfileStore {
@@ -60,7 +60,7 @@ export interface IProfileWithTables {
     whatsapp: string;
     
     groupId?: number;
-    userRoleLists?: IRole[];
+    userRoleLists?: IUserRole[];
     group?: IGroup;
 }
 

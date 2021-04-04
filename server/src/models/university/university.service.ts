@@ -138,6 +138,7 @@ export class UniversityService {
                 user.save();
                 arrUsers.push(user);
             });
+            console.log(usersId, groupId)
 
             return arrUsers;
         } catch (error) {

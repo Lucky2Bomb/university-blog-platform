@@ -30,10 +30,10 @@ export const getAllReports = async (count: number = 10, offset: number = 0, only
     }
 }
 
-export const checkReports = async (reportsId: number[], token: string): Promise<IReport> => {
+export const checkReport = async (reportId: number, token: string): Promise<IReport> => {
     try {
-        const request = `${config.serverURL}/publication/report`;
-        const response = await axios.post(request, { reportsId }, {
+        const request = `${config.serverURL}/publication/report/checked`;
+        const response = await axios.post(request, { reportId }, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

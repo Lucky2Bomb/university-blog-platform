@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@material-ui/data-grid';
-import { Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import { ControlPanelToolbar } from './ControlPanelToolbar';
 import { IProfile, IProfileWithTables } from '../types/Profile';
 import { RoleList } from '../other/role-list';
-import { IRole } from './../types/Role';
+import { IUserRole } from './../types/Role';
 import { convertDateToDD_MM_YYYY, convertDateToHH_MM } from './../other/convertTime';
 import rootStore from '../store/rootStore';
+import { observer } from 'mobx-react-lite';
 
 interface ControlPanelTableRowProps {
     profile: IProfileWithTables;
     checkBoxHandle?(value: number, checked: boolean): void;
 }
 
-export const ControlPanelTableRow: React.FC<ControlPanelTableRowProps> = ({ profile, checkBoxHandle }) => {
+export const ControlPanelTableRow: React.FC<ControlPanelTableRowProps> = observer(({ profile, checkBoxHandle }) => {
+    const { setActiveMoreInfoUser, selectMoreInfoUserId } = rootStore.controlPanelStore;
     const date = new Date(profile.createdAt);
     const surnameNamePatronymic = `${profile.surname} ${profile.name} ${profile.patronymic}`;
     const roles = profile.userRoleLists.map(role => role.roleName);
@@ -28,9 +30,10 @@ export const ControlPanelTableRow: React.FC<ControlPanelTableRowProps> = ({ prof
             <TableCell align="right">{profile.group && profile.group.name}</TableCell>
             <TableCell align="right">{convertDateToDD_MM_YYYY(date)} {convertDateToHH_MM(date)}</TableCell>
             <TableCell align="right">{roles.indexOf(RoleList.VERIFIED) > -1 ? <CheckIcon /> : <ClearIcon />}</TableCell>
-        </TableRow>
+            <TableCell align="right"><Button variant="outlined" onClick={() => { selectMoreInfoUserId(profile.id); setActiveMoreInfoUser(true)}}>Подробнее</Button></TableCell>
+        </TableRow >
     )
-}
+});
 
 {/* 
 <TableCell>ФИО</TableCell>

@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from "@nestjs/common";
 import { CreateGroupDto } from "./dto/create-group.dto";
 import { UniversityService } from "./university.service";
 import { CreateUniversityFacultySpecialtyDto } from "./dto/create-university-faculty-specialty.dto";
 import { EditGroupDto } from "./dto/edit-group.dto";
+import { Roles } from "../role/role.decorator";
+import { RoleList } from "../role/role-list";
+import { RolesGuard } from "../role/roles.guard";
 
 enum type {
     university = "university",
@@ -10,6 +13,7 @@ enum type {
     specialty = "specialty"
 }
 
+@UseGuards(RolesGuard)
 @Controller("/university")
 export class UniversityController {
 
@@ -21,15 +25,16 @@ export class UniversityController {
     }
 
     @Post("/group/create")
+    @Roles(RoleList.UNIVERSITY)
     createGroup(@Body() dto: CreateGroupDto) {
         return this.universityService.createGroup(dto);
     }
     
     @Post("/group/edit")
+    @Roles(RoleList.UNIVERSITY)
     editGroup(@Body() dto: EditGroupDto) {
         return this.universityService.editGroup(dto);
     }
-
 
     @Get("/group")
     getAllGroup() {
@@ -45,6 +50,7 @@ export class UniversityController {
     }
 
     @Delete("/group/delete/:id")
+    @Roles(RoleList.UNIVERSITY)
     deleteGroup(
         @Param("id") id: number
     ) {
@@ -52,6 +58,7 @@ export class UniversityController {
     }
 
     @Post("/group/join")
+    @Roles(RoleList.USER)
     joinGroup(
         @Body("userId") userId: number,
         @Body("groupId") groupId: number
@@ -60,6 +67,7 @@ export class UniversityController {
     }
     
     @Post("/group/add-users")
+    @Roles(RoleList.UNIVERSITY)
     addUsersInGroup(
         @Body("usersId") usersId: number[],
         @Body("groupId") groupId: number
@@ -77,6 +85,7 @@ export class UniversityController {
     // specialtyName?: string;
 
     @Post("/:type")
+    @Roles(RoleList.UNIVERSITY)
     createUniversityFacultySpecialty(
         @Param("type") type: type,
         @Body("name") name: string,
@@ -98,6 +107,7 @@ export class UniversityController {
         // faculty
         // specialty
     @Delete("/:type/:name")
+    @Roles(RoleList.UNIVERSITY)
     deleteUniversityFacultySpecialty(
         @Param("type") type: type,
         @Param("name") name: string,

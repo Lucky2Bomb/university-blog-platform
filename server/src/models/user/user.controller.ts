@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UseInterceptors, UploadedFiles } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UseInterceptors, UploadedFiles, UseGuards } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -9,7 +9,12 @@ import { SubscribeDto } from "./dto/subscribe.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { FileType, SectionType } from "../file/file.service";
 import { AddRoleToUsers } from "./dto/add-role-to-users.dto";
+import { RolesGuard } from "../role/roles.guard";
+import { RoleList } from "../role/role-list";
+import { Roles } from "../role/role.decorator";
+import { ReplaceRolesToUser } from './dto/replace-roles-to-user.dto';
 
+@UseGuards(RolesGuard)
 @Controller("/user")
 export class UserController {
 
@@ -70,6 +75,7 @@ export class UserController {
         return this.userService.create(dto);
     }
 
+
     @Post("/login")
     signin(@Body() dto: LoginUserDto) {
         return this.userService.login(dto);
@@ -87,7 +93,13 @@ export class UserController {
     ) {
         return this.userService.getAll(count, offset);
     }
-    
+
+    @Get("/list-all-teachers")
+    getAllTeachers() {
+        return this.userService.getAllTeachers();
+    }
+
+
     @Get("/list-with-include")
     getAllWithTables(
         @Query("count") count?: number,
@@ -104,11 +116,13 @@ export class UserController {
         return this.userService.getOne(id);
     }
 
-    @Delete("/:id")
+    @Delete("/")
+    @Roles(RoleList.USER_CONTROL)
     delete(
-        @Param("id") id: number
+        @Body("id") id?: number,
+        @Body("usersId") usersId?: number[]
     ) {
-        return this.userService.delete(id);
+        return this.userService.delete({ id, usersId });
     }
 
     @Get("/user-roles/:idUser")
@@ -126,16 +140,25 @@ export class UserController {
     }
 
     @Post("/role-to-user")
+    @Roles(RoleList.USER_ROLE)
     addRoleToUser(@Body() dto: AddRoleToUser) {
         return this.userService.addRoleToUser(dto);
     }
 
+    @Post("/replace-roles-to-user")
+    @Roles(RoleList.USER_ROLE)
+    replaceRolesToUser(@Body() dto: ReplaceRolesToUser) {
+        return this.userService.replaceRolesToUser(dto);
+    }
+
     @Post("/role-to-users")
+    @Roles(RoleList.USER_ROLE)
     addRoleToUsers(@Body() dto: AddRoleToUsers) {
         return this.userService.addRoleToUsers(dto);
     }
 
     @Delete("/role-to-user/:idUserRole")
+    @Roles(RoleList.USER_ROLE)
     deleteRoleToUser(
         @Param("idUserRole") idUserRole: number
     ) {
@@ -150,17 +173,26 @@ export class UserController {
     }
 
     @Post("/edit")
+    @Roles(RoleList.USER)
     edit(
         @Body() editUserDto: EditUserDto
     ) {
         return this.userService.edit(editUserDto);
     }
 
+    @Post("/edit-another-user")
+    @Roles(RoleList.USER_CONTROL)
+    editAnotherUser(
+        @Body() editUserDto: EditUserDto
+    ) {
+        return this.userService.editAnotherUser(editUserDto);
+    }
+
+
     @Post("/upload-avatar")
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 }
     ]))
-
     addAvatar(
         @UploadedFiles() files,
         @Query("userId") userId: number
@@ -177,6 +209,7 @@ export class UserController {
     }
 
     @Post("/upload-background")
+    @Roles(RoleList.VERIFIED)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 }
     ]))
@@ -189,6 +222,7 @@ export class UserController {
     }
 
     @Post("/delete-background")
+    @Roles(RoleList.VERIFIED)
     deleteBackground(
         @Query("userId") userId: number
     ) {

@@ -23,6 +23,7 @@ import { PublicationService } from './../publication/publication.service';
 import { Group } from "../university/database/group.model";
 import { tablesList } from "./interface/Tables-list";
 import { AddRoleToUsers } from "./dto/add-role-to-users.dto";
+import { ReplaceRolesToUser } from './dto/replace-roles-to-user.dto';
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -120,6 +121,18 @@ export class UserService {
         }
     }
 
+    async getAllTeachers(): Promise<User[]> {
+        try {
+            const users = await this.userModel.findAll({where: {
+                positionName: "преподаватель"
+            }});
+
+            return users;
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
 
     async getAllWithTables(count: number = 10, offset: number = 0, tables: string = ""): Promise<IUserPageList> {
 
@@ -170,14 +183,30 @@ export class UserService {
         }
     }
 
-    async delete(id: number): Promise<object> {
+    async delete({ id, usersId }): Promise<object> {
         try {
-            const user = await this.userModel.findByPk(id);
-            if (!user) {
+            if (id) {
+                const user = await this.userModel.findByPk(id);
+                if (!user) {
+                    throw new NotFoundException("пользователь не найден");
+                }
+                await user.destroy();
+                return { message: "пользователь удалён" };
+            } else if (usersId.length > 0) {
+                const users = await this.userModel.findAll({
+                    where: {
+                        id: usersId
+                    }
+                });
+
+                await users.map(async user => {
+                    await user.destroy();
+                });
+                return { message: "пользователи удалёны" };
+
+            } else {
                 throw new NotFoundException("пользователь не найден");
             }
-            user.destroy();
-            return { message: "пользователь удалён" };
         } catch (error) {
             console.log(error);
             throw new InternalServerErrorException("ошибка сервера");
@@ -202,6 +231,30 @@ export class UserService {
             const userRole = await this.userRoleModel.create({ roleName: role.name, userId: user.id });
 
             return { message: `роль ${role.name} добавлена пользователю ${user.username}` };
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerErrorException("ошибка сервера");
+        }
+    }
+
+
+    async replaceRolesToUser(dto: ReplaceRolesToUser): Promise<object> {
+        try {
+            const user = await this.userModel.findByPk(Number(dto.userId));
+            if (!user) {
+                throw new NotFoundException("пользователь не найден");
+            }
+
+            const userRoles = await this.userRoleModel.findAll({ where: { userId: user.id } });
+            await userRoles.map(async userRole => await userRole.destroy());
+            const newUserRoles = [];
+
+            await dto.roleNames.map(async roleName => {
+                newUserRoles.push(await this.userRoleModel.create({ roleName, userId: user.id }));
+            });
+
+
+            return newUserRoles;
         } catch (error) {
             console.log(error);
             throw new InternalServerErrorException("ошибка сервера");
@@ -340,6 +393,10 @@ export class UserService {
             console.log(error);
             throw new InternalServerErrorException("ошибка сервера");
         }
+    }
+
+    async editAnotherUser(dto: EditUserDto) {
+        this.edit(dto);
     }
 
     async subscribe(dto: SubscribeDto) {

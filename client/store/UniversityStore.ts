@@ -8,22 +8,22 @@ export default class UniversityStore implements IUniversityStore {
     constructor() {
         makeAutoObservable(this);
     }
-    selectedGroup: IGroup = null;
-    selectedUniversity: IUniversity = null;
-    selectedFaculty: IFaculty = null;
-    selectedSpecialty: ISpecialty = null;
+    selectedGroupId: number = 1;
+    selectedUniversityName: string = "";
+    selectedFacultyName: string = "";
+    selectedSpecialtyName: string = "";
 
-    selectGroup = (group: IGroup): void => {
-        this.selectedGroup = group;
+    selectGroup = (groupId: number): void => {
+        this.selectedGroupId = groupId;
     }
-    selectUniversity = (univeristy: IUniversity): void => {
-        this.selectedUniversity = univeristy;
+    selectUniversity = (univeristyName: string): void => {
+        this.selectedUniversityName = univeristyName;
     }
-    selectFaculty = (faculty: IFaculty): void => {
-        this.selectedFaculty = faculty;
+    selectFaculty = (facultyName: string): void => {
+        this.selectedFacultyName = facultyName;
     }
-    selectSpecialty = (specialty: ISpecialty): void => {
-        this.selectedSpecialty = specialty;
+    selectSpecialty = (specialtyName: string): void => {
+        this.selectedSpecialtyName = specialtyName;
     }
 
     groups: IGroup[] = [];

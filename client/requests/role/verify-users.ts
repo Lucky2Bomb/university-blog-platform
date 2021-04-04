@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../config";
-import { IRole } from "../../types/Role";
+import { IUserRole } from "../../types/Role";
 import { RoleList } from "../../other/role-list";
 
 export const verifyUsers = async (token: string, usersId: number[]) => {

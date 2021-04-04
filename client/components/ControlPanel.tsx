@@ -9,6 +9,11 @@ import { ControlPanelUsers } from './ControlPanelUsers';
 import { ControlPanelToolbar } from './ControlPanelToolbar';
 import { getAllUniversityFacultySpecialtyGroups } from '../requests/control_panel/getAllUniversityFacultySpecialtyGroups';
 import { getUsersWithTables } from '../requests/user/get-users-with-tables';
+import { getPositions } from '../requests/control_panel/getPositions';
+import { ControlPanelRoles } from './ControlPanelRoles';
+import { getAllRoles } from '../requests/role/get-all-roles';
+import { ControlPanelGuestRequests } from './ControlPanelGuestRequests';
+import { ControlPanelReports } from './ControlPanelReports';
 
 interface ControlPanelProps {
 }
@@ -42,6 +47,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = observer(({ }) => {
             universityStore.setSpecialties(res.specialties);
             universityStore.setGroups(res.groups);
         });
+        
+        getPositions().then((positions) => {
+            controlPanelStore.setPositions(positions);
+        });
     }, []);
 
     useEffect(() => {
@@ -50,6 +59,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = observer(({ }) => {
             controlPanelStore.setOffset(res.offset);
             controlPanelStore.setUsers(res.users);
             controlPanelStore.dropSelected();
+        });
+        getAllRoles().then(allRoles => {
+            controlPanelStore.setAllRoles(allRoles);
         });
     }, [controlPanelStore.isUpdate, controlPanelStore.currentCount, controlPanelStore.offset]);
 
@@ -65,12 +77,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = observer(({ }) => {
 
                 >
                     <Tab label="Пользователи" {...a11yProps(0)} />
-                    <Tab label="Верефикация" {...a11yProps(1)} />
-                    <Tab label="Item Three" {...a11yProps(2)} />
-                    <Tab label="Item Four" {...a11yProps(3)} />
-                    <Tab label="Item Five" {...a11yProps(4)} />
+                    <Tab label="Заявки" {...a11yProps(1)} />
+                    <Tab label="Жалобы" {...a11yProps(2)} />
+                    <Tab label="О ролях" {...a11yProps(3)} />
+                    {/* <Tab label="Item Five" {...a11yProps(4)} />
                     <Tab label="Заявки" {...a11yProps(5)} />
-                    <Tab label="Жалобы" {...a11yProps(6)} />
+                    <Tab label="Жалобы" {...a11yProps(6)} /> */}
                 </Tabs>
             </Grid>
             <Grid item xs={10}>
@@ -78,13 +90,13 @@ export const ControlPanel: React.FC<ControlPanelProps> = observer(({ }) => {
                     <ControlPanelUsers />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    Item Two
+                    <ControlPanelGuestRequests />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Item Three
+                    <ControlPanelReports />
                     </TabPanel>
                 <TabPanel value={value} index={3}>
-                    Item Four
+                    <ControlPanelRoles />
                 </TabPanel>
                 <TabPanel value={value} index={4}>
                     Item Five

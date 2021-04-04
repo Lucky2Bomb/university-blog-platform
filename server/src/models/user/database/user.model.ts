@@ -7,6 +7,7 @@ import { Subscriber } from './subscriber.model';
 import { Comment } from 'src/models/publication/database/comment.model';
 import { PublicationComplaint } from './../../publication/database/publication-complaint.model';
 import { Group } from './../../university/database/group.model';
+import { GuestRequest } from './guest_request.model';
 
 @Table
 export class User extends Model {
@@ -36,6 +37,10 @@ export class User extends Model {
 
     @HasMany(() => UserRole)
     userRoleLists: UserRole[]
+
+    @HasMany(() => GuestRequest)
+    guestRequests: GuestRequest[]
+
 
     @ForeignKey(() => Position)
     @Column

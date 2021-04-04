@@ -9,15 +9,15 @@ export interface IUniversityStore {
     setFaculties(faculties: IFaculty[]): void;
     setSpecialties(specialties: ISpecialty[]): void;
     
-    selectedGroup: IGroup;
-    selectedUniversity: IUniversity;
-    selectedFaculty: IFaculty;
-    selectedSpecialty: ISpecialty;
+    selectedGroupId: number;
+    selectedUniversityName: string;
+    selectedFacultyName: string;
+    selectedSpecialtyName: string;
 
-    selectGroup(group: IGroup): void;
-    selectUniversity(university: IUniversity): void;
-    selectFaculty(faculty: IFaculty): void;
-    selectSpecialty(specialty: ISpecialty): void;
+    selectGroup(groupId: number): void;
+    selectUniversity(universityName: string): void;
+    selectFaculty(facultyName: string): void;
+    selectSpecialty(specialtyName: string): void;
 }
 
 export interface IGroup {

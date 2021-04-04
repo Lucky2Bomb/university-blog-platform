@@ -10,6 +10,8 @@ import rootStore from '../store/rootStore';
 import { ToolbarGroup } from './ControlPanelTools/ToolbarGroup';
 import { ToolBarPageSize } from './ControlPanelTools/ToolBarPageSize';
 import { verifyUsers } from './../requests/role/verify-users';
+import { RoleList } from '../other/role-list';
+import { deleteUsers } from '../requests/user/delete-user';
 
 
 interface ControlToolbarProps {
@@ -17,13 +19,23 @@ interface ControlToolbarProps {
 
 export const ControlPanelToolbar: React.FC<ControlToolbarProps> = observer(({ }) => {
     const [group, setGroup] = React.useState("");
-    const { controlPanelStore, universityStore } = rootStore;
+    const { controlPanelStore, universityStore, myProfile } = rootStore;
+    const isAdmin = Boolean(myProfile.roles.find(role => role === RoleList.ADMIN));
+    const isUserControl = Boolean(myProfile.roles.find(role => role === RoleList.USER_CONTROL));
+
 
     const groupHandle = (event: React.ChangeEvent<{ value: unknown }>) => {
         setGroup(event.target.value as string);
     };
 
     const isDisabledToolbar = controlPanelStore.selectedUsersId.size < 1;
+
+    const deleteUsersHandler = () => {
+        deleteUsers(getArrSelectedUsersId(), localStorage.getItem("token")).finally(() => {
+            controlPanelStore.update();
+            controlPanelStore.setUsers([]);
+        });
+    }
 
     const getArrSelectedUsersId = (): number[] => {
         const arr = [];
@@ -58,7 +70,7 @@ export const ControlPanelToolbar: React.FC<ControlToolbarProps> = observer(({ })
                 <Grid item className={styles.style_separator__item}>
                     <Tooltip title="Удалить выбранных пользователей">
                         <span>
-                            <IconButton disabled={isDisabledToolbar}>
+                            <IconButton disabled={isDisabledToolbar && !(isAdmin || isUserControl)} onClick={deleteUsersHandler}>
                                 <DeleteIcon />
                             </IconButton>
                         </span>

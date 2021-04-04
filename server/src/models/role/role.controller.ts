@@ -1,13 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from "@nestjs/common";
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RoleService } from './role.service';
+import { RolesGuard } from "./roles.guard";
+import { RoleList } from "./role-list";
+import { Roles } from "./role.decorator";
 
+@UseGuards(RolesGuard)
 @Controller("/roles")
 export class RoleController {
 
     constructor(private roleService: RoleService) { }
 
     @Post("/create")
+    @Roles(RoleList.ADMIN)
     create(@Body() dto: CreateRoleDto) {
         return this.roleService.create(dto);
     }
@@ -25,6 +30,7 @@ export class RoleController {
     }
 
     @Delete("/:name")
+    @Roles(RoleList.ADMIN)
     delete(
         @Param("name") name: string
     ) {

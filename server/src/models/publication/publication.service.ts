@@ -89,18 +89,11 @@ export class PublicationService {
         }
     }
 
-    async checkReportPublication(reportsId: number[]) {
+    async checkReportPublication(reportId: number) {
         try {
-            const reports = await this.publicationComplaintModel.findAll({
-                where: {
-                    id: reportsId
-                }
-
-            })
-            await reports.map(item => {
-                item.checked = true;
-                item.save();
-            });
+            const reports = await this.publicationComplaintModel.findByPk(reportId);
+            reports.checked = true;
+            await reports.save();
             return reports;
 
         } catch (error) {
@@ -109,10 +102,10 @@ export class PublicationService {
         }
     }
 
-    async getReports(count = 10, offset = 0, onlyNotChecked = false) {
+    async getReports(count = 10, offset = 0, onlyNotChecked: string = "false") {
         try {
-            const where = {}
-            if(onlyNotChecked) {
+            const where = {};
+            if(onlyNotChecked === "true") {
                 where["checked"] = false
             }
 
@@ -120,9 +113,16 @@ export class PublicationService {
                 limit: Number(count <= config.pagination_settings.max_count ? count : config.pagination_settings.max_count),
                 offset: Number(offset),
                 order: [['createdAt', 'DESC']],
-                where
+                where,
+                include: [User]
             });
-            return reports;
+            const reportsCount = await this.publicationComplaintModel.count();
+            return {
+                reports: reports.rows,
+                allCount: reportsCount,
+                currentCount: Number(count),
+                offset: Number(offset)
+            };
         } catch (error) {
             console.log(error);
             throw new InternalServerErrorException("ошибка сервера");

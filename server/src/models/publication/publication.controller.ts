@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UploadedFiles, UseInterceptors, Headers } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters, UploadedFiles, UseInterceptors, Headers, UseGuards } from "@nestjs/common";
 import { PublicationService } from './publication.service';
 import { CreatePublicationDto } from "./dto/create-publication.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { EditPublicationDto } from "./dto/edit-publication.dto";
 import { ReportPublicationDto } from "./dto/report-publication.dto";
+import { RolesGuard } from "../role/roles.guard";
+import { Roles } from "../role/role.decorator";
+import { RoleList } from "../role/role-list";
 
+@UseGuards(RolesGuard)
 @Controller("/publication")
 export class PublicationController {
 
@@ -29,6 +33,7 @@ export class PublicationController {
     }
 
     @Post("/create")
+    @Roles(RoleList.VERIFIED)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
         { name: 'file', maxCount: 1 }
@@ -43,6 +48,7 @@ export class PublicationController {
     }
 
     @Post("/edit-publication")
+    @Roles(RoleList.PUBLICATIONS)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
         { name: 'file', maxCount: 1 }
@@ -57,6 +63,7 @@ export class PublicationController {
     }
 
     @Post("/report")
+    @Roles(RoleList.VERIFIED)
     reportPublication(
         @Body() dto: ReportPublicationDto
     ) {
@@ -64,22 +71,25 @@ export class PublicationController {
     }
 
     @Post("/report/checked")
+    @Roles(RoleList.PUBLICATIONS)
     checkReportPublication(
-        @Body("reportsId") reportsId: number[]
+        @Body("reportId") reportId: number
     ) {
-        return this.publicationService.checkReportPublication(reportsId);
+        return this.publicationService.checkReportPublication(reportId);
     }
 
     @Get("/report/all")
+    @Roles(RoleList.PUBLICATIONS)
     getReports(
         @Query("count") count?: number,
         @Query("offset") offset?: number,
-        @Query("onlyNotChecked") onlyNotChecked?: boolean
+        @Query("onlyNotChecked") onlyNotChecked?: string
     ) {
         return this.publicationService.getReports(count, offset, onlyNotChecked);
     }
 
     @Post("/edit-user-publication")
+    @Roles(RoleList.PUBLICATIONS)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
         { name: 'file', maxCount: 1 }
@@ -95,6 +105,7 @@ export class PublicationController {
 
 
     @Delete("/delete-publication/:id")
+    @Roles(RoleList.VERIFIED)
     deleteMyPublication(
         @Param("id") id: number,
         @Headers("Authorization") authorization: string
@@ -103,6 +114,7 @@ export class PublicationController {
     }
 
     @Delete("/delete-user-publication/:id")
+    @Roles(RoleList.PUBLICATIONS)
     deleteUserPublication(
         @Param("id") id: number,
         @Headers("Authorization") authorization: string

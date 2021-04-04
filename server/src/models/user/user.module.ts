@@ -23,11 +23,14 @@ import { Group } from "../university/database/group.model";
 import { University } from "../university/database/university.model";
 import { Specialty } from "../university/database/specialty.model";
 import { Faculty } from "../university/database/faculty.model";
+import { GuestService } from "./guest.service";
+import { GuestController } from "./guest.controller";
+import { GuestRequest } from "./database/guest_request.model";
 
 @Module({
-    imports: [SequelizeModule.forFeature([User, UserRole, Role, Position, Publication, Bookmark, Subscriber, Comment, PublicationComplaint, Group, University, Faculty, Specialty])],
-    controllers: [UserController, PositionController],
-    providers: [UserService, PositionService, FileService, PublicationService]
+    imports: [SequelizeModule.forFeature([User, UserRole, Role, Position, Publication, Bookmark, Subscriber, Comment, PublicationComplaint, Group, University, Faculty, Specialty, GuestRequest])],
+    controllers: [UserController, PositionController, GuestController],
+    providers: [UserService, PositionService, FileService, PublicationService, GuestService]
 })
 
 export class UserModule implements NestModule {
@@ -38,24 +41,44 @@ export class UserModule implements NestModule {
         //     .forRoutes({ path: "user/subscribe", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_CONTROL))
-            .forRoutes({ path: "user/*/", method: RequestMethod.DELETE });
+            .apply(AuthMiddleware)
+            .forRoutes({ path: "guest/get-applications*", method: RequestMethod.GET });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
+            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)
+            .forRoutes({ path: "guest/checked", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware)
+            .forRoutes({ path: "user/*/", method: RequestMethod.DELETE });
+        consumer
+            .apply(AuthMiddleware)
+            .forRoutes({ path: "user/", method: RequestMethod.DELETE });
+
+        consumer
+            .apply(AuthMiddleware)
             .forRoutes({ path: "user/role-to-user/*/", method: RequestMethod.DELETE });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "user/role-to-user", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_ROLE))
+            .apply(AuthMiddleware)
+            .forRoutes({ path: "user/replace-roles-to-user", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware)
             .forRoutes({ path: "user/role-to-users", method: RequestMethod.POST });
 
         consumer
             .apply(AuthMiddleware, CompareBodyUserIdAndTokenMiddleware)
             .forRoutes({ path: "user/edit", method: RequestMethod.POST });
+
+        consumer
+            .apply(AuthMiddleware)
+            .forRoutes({ path: "user/edit-another-user", method: RequestMethod.POST });
+
 
         consumer
             .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)

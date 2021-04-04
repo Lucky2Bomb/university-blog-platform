@@ -17,14 +17,9 @@ export async function AuthMiddleware(req, res, next: () => void) {
                 throw new BadRequestException("не авторизован");
             }
             const decodedTokenData: IDecodedTokenStructure = await jsonwebtoken.verify(token, config.secret_key);
-            const isAdmin = Boolean(await decodedTokenData.userRoles.find((item) => item === RoleList.ADMIN));
-            if (isAdmin) {
-                req.body.userRoles = decodedTokenData.userRoles;
-                req.body.isAdmin = true;
-                next();
-            }
+            const isAdmin = Boolean(decodedTokenData.userRoles.find((item) => item === RoleList.ADMIN));
             req.body.userRoles = decodedTokenData.userRoles;
-            req.body.isAdmin = false;
+            req.body.isAdmin = isAdmin;
             next();
         } catch (error) {
             console.log(error)

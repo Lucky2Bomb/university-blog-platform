@@ -3,6 +3,8 @@ import MyProfileStore from './MyProfileStore';
 import NewsStore from './NewsStore';
 import UniversityStore from './UniversityStore';
 import ControlPanelStore from './ControlPanelStore';
+import GuestStore from './GuestStore';
+import ReportStore from './ReportStore';
 
 class RootStore {
     authStore: AuthStore;
@@ -10,6 +12,8 @@ class RootStore {
     newsStore: NewsStore;
     universityStore: UniversityStore;
     controlPanelStore: ControlPanelStore;
+    guestStore: GuestStore;
+    reportStore: ReportStore;
 
     constructor() {
         this.authStore = new AuthStore();
@@ -17,6 +21,8 @@ class RootStore {
         this.newsStore = new NewsStore();
         this.universityStore = new UniversityStore();
         this.controlPanelStore = new ControlPanelStore();
+        this.guestStore = new GuestStore();
+        this.reportStore = new ReportStore();
     }
 } 
 
