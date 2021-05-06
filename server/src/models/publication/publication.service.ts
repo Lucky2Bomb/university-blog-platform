@@ -137,6 +137,7 @@ export class PublicationService {
             const decodedTokenData: IDecodedTokenStructure = jsonwebtoken.verify(token, config.secret_key);
             let picturePath;
             let filePath;
+            console.log(decodedTokenData);
 
             if (picture.length > 0) {
                 if (picture[0].size > config.file_settings.publication.max_picture_size) {

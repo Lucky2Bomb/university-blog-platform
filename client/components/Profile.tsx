@@ -69,10 +69,10 @@ export const Profile: React.FC<ProfileProps> = ({ profile, isMyProfile }) => {
                         <ProfileInfo profile={profile} />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        <ProfileSubscriptions profile={profile} isSubscribers={true}/>
+                        <ProfileSubscriptions profile={profile}/>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
-                        <ProfileSubscriptions profile={profile}/>
+                        <ProfileSubscriptions profile={profile} isSubscribers={true}/>
                     </TabPanel>
                     <TabPanel value={value} index={4}>
                         <ProfilePublications userId={[profile.id]} isMyProfile={false} isNewsFeed={true}/>

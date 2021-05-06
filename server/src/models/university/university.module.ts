@@ -2,8 +2,6 @@ import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/c
 import { SequelizeModule } from "@nestjs/sequelize";
 import { AuthMiddleware } from "../../middleware/auth.middleware";
 import { AddUserIdInBodyMiddleware, CompareBodyUserIdAndTokenMiddleware, } from "../../middleware/user.middleware";
-import { RoleMiddleware } from "../../middleware/role.middleware";
-import { RoleList } from "../role/role-list";
 import { Group } from "./database/group.model";
 import { User } from "../user/database/user.model";
 import { University } from "./database/university.model";

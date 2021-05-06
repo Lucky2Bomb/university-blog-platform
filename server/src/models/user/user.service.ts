@@ -66,17 +66,18 @@ export class UserService {
     }
 
     async login(dto: LoginUserDto): Promise<Object> {
-        const user = await this.userModel.findOne({ where: { username: dto.username } });
-        if (!user) {
-            throw new NotFoundException("пользователь не найден");
-        }
-        const validPassword = bcrypt.compareSync(dto.password, user.password);
-        if (!validPassword) {
-            throw new BadRequestException("не верный пароль");
-        }
         try {
+            const user = await this.userModel.findOne({ where: { username: dto.username } });
+            if (!user) {
+                throw new NotFoundException("пользователь не найден");
+            }
+            const validPassword = bcrypt.compareSync(dto.password, user.password);
+            if (!validPassword) {
+                throw new BadRequestException("не верный пароль");
+            }
 
-            const userRoles = await this.userRoleModel.findAll({ where: { userId: user.id } });
+            const userRoles = await this.userRoleModel.findAll({ where: { userId: Number(user.id) } });
+            console.log(userRoles);
             const arrStringUserRoles: RoleList[] = [];
             userRoles.map(role => arrStringUserRoles.push(RoleList[role.roleName]));
             let tokenStructure: IDecodedTokenStructure = { userId: Number(user.id), userRoles: arrStringUserRoles };
@@ -299,6 +300,7 @@ export class UserService {
         if (!decodedTokenData.userId) {
             throw new BadRequestException("токен не верно указан либо устарел");
         }
+        console.log(decodedTokenData)
         try {
             const userRoles = await this.userRoleModel.findAll({ where: { userId: decodedTokenData.userId } });
             return userRoles;
@@ -575,12 +577,11 @@ export class UserService {
                 throw new InternalServerErrorException("пользователь не найден");
             }
 
-            if (type === SectionType.PROFILE_AVATAR && user.avatarUrl) {
+            if ((type === SectionType.PROFILE_AVATAR) && user.avatarUrl) {
                 await this.fileService.removeFile(user.avatarUrl);
             }
-
-            if (type === SectionType.PROFILE_BACKGROUND && user.backgroundUrl) {
-                await this.fileService.removeFile(user.avatarUrl);
+            if ((type === SectionType.PROFILE_BACKGROUND) && user.backgroundUrl) {
+                await this.fileService.removeFile(user.backgroundUrl);
             }
 
             let picturePath;

@@ -209,7 +209,6 @@ export class UserController {
     }
 
     @Post("/upload-background")
-    @Roles(RoleList.VERIFIED)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 }
     ]))
@@ -222,7 +221,6 @@ export class UserController {
     }
 
     @Post("/delete-background")
-    @Roles(RoleList.VERIFIED)
     deleteBackground(
         @Query("userId") userId: number
     ) {

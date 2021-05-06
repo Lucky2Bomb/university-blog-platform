@@ -11,8 +11,6 @@ import { BookmarkService } from "./bookmark.service";
 import { Comment } from "./database/comment.model";
 import { AuthMiddleware } from "../../middleware/auth.middleware";
 import { AddUserIdInBodyMiddleware,  } from "../../middleware/user.middleware";
-import { RoleMiddleware } from "../../middleware/role.middleware";
-import { RoleList } from "../role/role-list";
 import { CommentController } from "./comment.controller";
 import { CommentService } from "./comment.service";
 import { PublicationComplaint } from './database/publication-complaint.model';
@@ -41,6 +39,10 @@ export class PublicationModule
             consumer
             .apply(AuthMiddleware)
             .forRoutes({path: "publication/report/checked", method: RequestMethod.POST});
+            
+            consumer
+            .apply(AuthMiddleware)
+            .forRoutes({path: "publication/create", method: RequestMethod.POST});
 
             consumer
             .apply(AuthMiddleware)

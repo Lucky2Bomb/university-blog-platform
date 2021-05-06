@@ -2,6 +2,7 @@ export default {
     serverPort: 5000,
     secret_key: "ytRWE-Epn213k9404.ss950",
     token_auth_lifetime: "2h",
+    logging: false,
     file_settings: {
         publication: {
             //in bytes

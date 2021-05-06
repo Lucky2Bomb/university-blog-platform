@@ -17,7 +17,6 @@ export async function AddUserIdInBodyMiddleware(req, res, next: () => void) {
             }
             const decodedTokenData: IDecodedTokenStructure = jsonwebtoken.verify(token, config.secret_key);
             req.body.userId = Number(decodedTokenData.userId);
-            console.log(req.body);
             next();
         } catch (error) {
             throw new BadRequestException("ошибка при получении userId");
@@ -86,7 +85,7 @@ export async function PushUserIdInQueryByTokenMiddleware(req, res, next: () => v
             if (!decodedTokenData.userId) {
                 throw new BadRequestException("указан не свой userId");
             }
-            req.body.userId = Number(decodedTokenData.userId);
+            req.query.userId = Number(decodedTokenData.userId);
             next();
         } catch (error) {
             throw new BadRequestException("ошибка при получении токена");

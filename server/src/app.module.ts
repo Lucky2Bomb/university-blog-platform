@@ -6,10 +6,8 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { RoleModule } from "./models/role/role.module";
 import { PublicationModule } from "./models/publication/publication.module";
 import config from "config";
-import { RoleList } from "./models/role/role-list";
 import { AddUserIdInBodyMiddleware, CompareQueryUserIdAndTokenMiddleware, PushUserIdInQueryByTokenMiddleware, CompareBodyUserIdAndTokenMiddleware } from "./middleware/user.middleware";
 import { AuthMiddleware } from "./middleware/auth.middleware";
-import { RoleMiddleware } from "./middleware/role.middleware";
 import { TestConnectionModule } from "./models/test-connection/test-connection.module";
 import { UniversityModule } from './models/university/university.module';
 
@@ -22,7 +20,8 @@ const { host, port, username, password, database, timezone } = config.database;
             dialect: 'mysql',
             host, port, username, password, database, timezone,
             autoLoadModels: true,
-            synchronize: true
+            synchronize: true,
+            logging: config.logging
         }),
         UserModule, RoleModule, PublicationModule, TestConnectionModule, UniversityModule
     ],
@@ -33,43 +32,43 @@ export class AppModule
     implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_POSITION))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "position/create", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_POSITION))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "position/*", method: RequestMethod.DELETE });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.ADMIN))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "roles/create", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "publication/create", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "publication/edit-publication", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.PUBLICATIONS))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "publication/delete-user-publication/*", method: RequestMethod.DELETE });
 
         consumer
-            .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_POSITION))
+            .apply(AuthMiddleware)
             .forRoutes({ path: "position/add-position-to-user", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, AddUserIdInBodyMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware, AddUserIdInBodyMiddleware)
             .forRoutes({ path: "bookmark/create", method: RequestMethod.POST });
 
         consumer
-            .apply(AuthMiddleware, CompareQueryUserIdAndTokenMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware, CompareQueryUserIdAndTokenMiddleware)
             .forRoutes({ path: "bookmark/", method: RequestMethod.GET });
 
         consumer
-            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware, RoleMiddleware(RoleList.VERIFIED))
+            .apply(AuthMiddleware, PushUserIdInQueryByTokenMiddleware)
             .forRoutes({ path: "bookmark/delete/:id", method: RequestMethod.DELETE });
 
         consumer
@@ -78,11 +77,11 @@ export class AppModule
 
 
         // consumer
-        // .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_POSITION))
+        // .apply(AuthMiddleware)
         // .forRoutes({path: "position/create", method: RequestMethod.POST});
 
         // consumer
-        // .apply(AuthMiddleware, RoleMiddleware(RoleList.USER_POSITION))
+        // .apply(AuthMiddleware)
         // .forRoutes({path: "position/:name", method: RequestMethod.DELETE});
         //
     }
